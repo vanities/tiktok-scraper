@@ -1206,29 +1206,24 @@ export class TikTokScraper extends EventEmitter {
 
             if (response.includes("__NEXT_DATA__")){
                 const rawVideoMetadata = response
-<<<<<<< HEAD
-                    .split(/<script id="__NEXT_DATA__" type="application\/json" nonce="[\w-]+" crossorigin="anonymous">/)[1]
-                    .split(`</script>`)[0];
-=======
                 .split(/<script id="__NEXT_DATA__" type="application\/json" nonce="[\w-]+" crossorigin="anonymous">/)[1]
                 .split(`</script>`)[0];
->>>>>>> 9072d2b (upd)
 
                 const videoProps = JSON.parse(rawVideoMetadata);
                 const videoData = videoProps.props.pageProps.itemInfo.itemStruct;
                 return videoData as FeedItems;
             }
 
-            if (response.includes('SIGI_STATE')) {
-                const rawVideoMetadata = response.split('<script id="SIGI_STATE" type="application/json">')[1].split('</script>')[0];
+            if (response.includes("SIGI_STATE")) {
+                // Sometimes you may receive a state in different format, so we should parse it too
+                // New format - https://pastebin.com/WLUpL0ei
+                const rawVideoMetadata = response
+                .split('<script id="SIGI_STATE" type="application/json">')[1]
+                .split('</script>')[0];
 
                 const videoProps = JSON.parse(rawVideoMetadata);
                 const videoData = Object.values(videoProps.ItemModule)[0];
-<<<<<<< HEAD
-                return videoData as FeedItems;
-=======
                 return <FeedItems>videoData;
->>>>>>> 9072d2b (upd)
             }
 
             throw new Error('No available parser for html page')
